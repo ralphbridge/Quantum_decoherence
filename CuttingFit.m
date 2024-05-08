@@ -3,10 +3,14 @@ clc
 
 data=readmatrix('data/2024-05-03_fullbeam_2ndslit.xlsx');
 
-slope=-1; % 1 for increasing data (erf), -1 for decreasing data (erfc)
-
 xdata=data(:,1)*1e-3;
 ydata=data(:,2);
+
+if data(1,2)<data(length(ydata),2) % 1 for increasing data (erf), -1 for decreasing data (erfc)
+    slope=1;
+else
+    slope=-1;
+end
 
 if slope==1
     ydata=ydata-(max(ydata)+min(ydata))/2; % Adjusting the vertical data to matlabs erf(x)
@@ -31,7 +35,7 @@ xteo=linspace(min(xdata),max(xdata),1000);
 figure
 subplot(2,1,1)
 plot(xdata,ydata,'ko',xteo,fun(x,xteo),'b-')%,linspace(min(xdata),max(xdata)),max(ydata)*erf((linspace(min(xdata),max(xdata))-xdata(abs(ydata)==min(abs(ydata))))/7),'r-')
-legend('Experimental data','Fitted $A$ erf$\left(\frac{x-x_0}{\sigma\sqrt 2}\right)$','interpreter','latex')
+legend('Experimental data','Fitted $A$ erf$\left(\frac{x-x_0}{\sigma\sqrt 2}\right)$','interpreter','latex','FontSize',15)
 xlabel('$x\ mm$','interpreter','latex','FontSize',15)
 ylabel('Counts')
 grid on
