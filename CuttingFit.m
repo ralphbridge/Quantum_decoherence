@@ -1,9 +1,9 @@
 clear all
 clc
 
-data=readmatrix('data/2024-05-03_fullbeam_2ndslit.xlsx');
+data=readmatrix('data/2024-05-08_fullbeam_1stslitIN2ndslit.xlsx');
 
-xdata=data(:,1)*1e-3;
+xdata=data(:,1)*1000;
 ydata=data(:,2);
 
 if data(1,2)<data(length(ydata),2) % 1 for increasing data (erf), -1 for decreasing data (erfc)
@@ -14,16 +14,16 @@ end
 
 if slope==1
     ydata=ydata-(max(ydata)+min(ydata))/2; % Adjusting the vertical data to matlabs erf(x)
-    lb=[max(ydata)/4,xdata(abs(ydata)==min(abs(ydata)))/2,0.01]; % lower bounds for the fit (they might change depending on the units)
-    ub=[max(ydata),xdata(abs(ydata)==min(abs(ydata)))*2,100]; % upper bounds for the fit
+    lb=[max(ydata)/4,xdata(abs(ydata)==min(abs(ydata)))/2,(max(xdata)-min(xdata))/10]; % lower bounds for the fit (they might change depending on the units)
+    ub=[max(ydata),xdata(abs(ydata)==min(abs(ydata)))*2,(max(xdata)-min(xdata))]; % upper bounds for the fit
     fun=@(x,xdata)x(1)*erf((xdata-x(2))/x(3));
-    x0=[max(ydata)/2,max(xdata)+min(xdata),0.0001]; % Initial guess
+    x0=[max(ydata),max(xdata)+min(xdata),(max(xdata)-min(xdata))/2]; % Initial guess
 elseif slope==-1
     ydata=ydata-min(ydata);
-    lb=[max(ydata)/3,min(xdata(abs(ydata)==min(abs(ydata)))/2),0.01];
-    ub=[max(ydata),min(xdata(abs(ydata)==min(abs(ydata)))*2),100];
+    lb=[max(ydata)/3,min(xdata(abs(ydata)==min(abs(ydata)))/2),(max(xdata)-min(xdata))/10];
+    ub=[max(ydata),min(xdata(abs(ydata)==min(abs(ydata)))*2),max(xdata)-min(xdata)];
     fun=@(x,xdata)x(1)*erfc((xdata-x(2))/x(3));
-    x0=[max(ydata)/2,(max(xdata)+min(xdata))/2,0.0001];
+    x0=[max(ydata),(max(xdata)+min(xdata))/2,(max(xdata)-min(xdata))/2];
 end
 
 x = lsqcurvefit(fun,x0,xdata,ydata,lb,ub);
