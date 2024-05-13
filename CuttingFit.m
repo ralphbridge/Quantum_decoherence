@@ -1,9 +1,9 @@
 clear all
 clc
 
-data=readmatrix('data/2024-05-08_fullbeam_1stslitIN2ndslit.xlsx');
+data=readmatrix('data/2024-05-13_bothslitsIN_RFA.xlsx');
 
-xdata=data(:,1)*1000;
+xdata=data(:,1)*1000; % Measured data always in meters
 ydata=data(:,2);
 
 if data(1,2)<data(length(ydata),2) % 1 for increasing data (erf), -1 for decreasing data (erfc)
