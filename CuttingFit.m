@@ -1,7 +1,7 @@
 clear all
 clc
 
-data=readmatrix('data/2024-05-13_bothslitsIN_RFA.xlsx');
+data=readmatrix('data/2024-05-14_bothslitsIN_grating.xlsx');
 
 xdata=data(:,1)*1000; % Measured data always in meters
 ydata=data(:,2);
