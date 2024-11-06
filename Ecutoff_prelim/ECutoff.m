@@ -28,6 +28,7 @@ crate=[733.6,755.8,504.2,703.4,547,487.8,198.8,113.2,164,106,26.6];
 
 V=linspace(2025*0.495,2075*0.495,length(data));
 cutoff=zeros(size(gap));
+DeltaV_cutoff=zeros(size(gap));
 for i=1:length(gap)
     vec1=[];
     vec2=[];
@@ -58,29 +59,30 @@ for i=1:length(gap)
         end
     end
     P2=polyfit(V2,vec2,1);
-    %cutoff(i)=(-P2(2)/P2(1)+(P2(2)-P1(2))/(P1(1)-P2(1)))/2;
-    figure
-    plot(V,data(:,i),'o')
-    hold on
-    plot(V,P1(1)*V+P1(2))
-    plot(V,P2(1)*V+P2(2))
-    txt = ['\leftarrow Cutoff: ' num2str(cutoff(i)) ' V'];
-    t=text(cutoff(i),(-P2(1)*P1(2)+P1(1)*P2(2))/(P1(1)-P2(1))/2,txt);
-    t.FontSize = 14;
-    grid on
-    xlabel('RFA Voltage $V$','Interpreter','latex','FontSize',14)
-    ylabel('Counts/s','Interpreter','latex','FontSize',14)
-    title(['Gap height ',num2str(gap(i)),' um for Average count rate ',num2str(crate(i)),' C/s'])
-    axis([min(V) max(V) 0 1.2*max(data(:,i))])
+    % figure
+    % plot(V,data(:,i),'o')
+    % hold on
+    % plot(V,P1(1)*V+P1(2))
+    % plot(V,P2(1)*V+P2(2))
+    % txt=['\leftarrow Cutoff: ' num2str(cutoff(i)) ' V'];
+    % t=text(cutoff(i),(-P2(1)*P1(2)+P1(1)*P2(2))/(P1(1)-P2(1))/2,txt);
+    % t.FontSize = 14;
+    % grid on
+    % xlabel('RFA Voltage $V$','Interpreter','latex','FontSize',14)
+    % ylabel('Counts/s','Interpreter','latex','FontSize',14)
+    % title(['Gap height ',num2str(gap(i)),' um for Average count rate ',num2str(crate(i)),' C/s'])
+    % axis([min(V) max(V) 0 1.2*max(data(:,i))])
     cutoff(i)=-P2(2)/P2(1);
+    DeltaV_cutoff(i)=(P2(1)*P1(2)-P1(1)*P2(2))/((P1(1)-P2(1))*P2(1));
 end
 
-P3=polyfit(gap,cutoff,1);
 figure
 plot(gap,cutoff,'o')
-hold on
-plot(gap,P3(1)*gap+P3(2))
+for i=1:length(gap)
+    txt=['\DeltaV: ' num2str(DeltaV_cutoff(i)) ' V'];
+    t=text(gap(i)-1,cutoff(i)-0.05,txt);
+    t.FontSize = 14;
+end
 xlabel('Gap size $\mu m$','Interpreter','latex','FontSize',14)
 ylabel('Cutoff voltage $V$','Interpreter','latex','FontSize',14)
 grid on
-

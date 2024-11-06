@@ -28,6 +28,7 @@ crate=[733.6,755.8,504.2,703.4,547,487.8,198.8,113.2,164,106,26.6];
 
 V=linspace(2025*0.495,2075*0.495,length(data));
 cutoff=zeros(size(gap));
+DeltaV_cutoff=zeros(size(gap));
 for i=1:length(gap)
     vec1=[];
     vec2=[];
@@ -58,7 +59,6 @@ for i=1:length(gap)
         end
     end
     P2=polyfit(V2,vec2,1);
-    %cutoff(i)=(-P2(2)/P2(1)+(P2(2)-P1(2))/(P1(1)-P2(1)))/2;
     figure
     plot(V,data(:,i),'o')
     hold on
@@ -73,6 +73,7 @@ for i=1:length(gap)
     title(['Gap height ',num2str(gap(i)),' um for Average count rate ',num2str(crate(i)),' C/s'])
     axis([min(V) max(V) 0 1.2*max(data(:,i))])
     cutoff(i)=-P2(2)/P2(1);
+    DeltaV_cutoff(i)=(P2(1)*P1(2)-P1(1)*P2(2))/((P1(1)-P2(1))*P2(1));
 end
 
 P3=polyfit(gap,cutoff,1);
@@ -80,7 +81,8 @@ figure
 plot(gap,cutoff,'o')
 hold on
 plot(gap,P3(1)*gap+P3(2))
+txt = ['\Delta V: ' num2str(cutoff(i)) ' V'];
+t2=text(gap(i),(-P2(1)*P1(2)+P1(1)*P2(2))/(P1(1)-P2(1))/2,txt);
 xlabel('Gap size $\mu m$','Interpreter','latex','FontSize',14)
 ylabel('Cutoff voltage $V$','Interpreter','latex','FontSize',14)
 grid on
-
