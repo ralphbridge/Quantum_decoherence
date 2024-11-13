@@ -1,6 +1,3 @@
-clear all
-clc
-
 data1=readmatrix("NewAuChannel_cutoff_1.txt");
 data1b=readmatrix("NewAuChannel_cutoff_1b.txt");
 data2=readmatrix("NewAuChannel_cutoff_2.txt");
@@ -13,7 +10,7 @@ data6=readmatrix("NewAuChannel_cutoff_6.txt");
 data7=readmatrix("NewAuChannel_cutoff_7.txt");
 data8=readmatrix("NewAuChannel_cutoff_8.txt");
 
-datatemp=horzcat(data1,data1b,data2,data2b,data3,data3b,data4,data5,data6,data7,data8);
+datatemp=horzcat(data1b,data2b,data3,data3b,data4,data5,data6,data7,data8);
 
 data=zeros(size(datatemp,1),size(datatemp,2)/2);
 
@@ -23,8 +20,10 @@ for j=1:size(data,2)
     end
 end
 
-gap=[20.77674024,20.77674024,17.59337861,17.59337861,12.28777589,12.28777589,5.921052632,4.859932088,3.798811545,2.737691002,1.591680815];
-crate=[733.6,755.8,504.2,703.4,547,487.8,198.8,113.2,164,106,26.6];
+% gap=[20.77674024,20.77674024,17.59337861,17.59337861,12.28777589,12.28777589,5.921052632,4.859932088,3.798811545,2.737691002,1.591680815];
+gap=[20.77674024,17.59337861,12.28777589,12.28777589,5.921052632,4.859932088,3.798811545,2.737691002,1.591680815];
+% crate=[733.6,755.8,504.2,703.4,547,487.8,198.8,113.2,164,106,26.6];
+crate=[755.8,703.4,547,487.8,198.8,113.2,164,106,26.6];
 
 V=linspace(2025*0.495,2075*0.495,length(data));
 cutoff=zeros(size(gap));
@@ -59,30 +58,40 @@ for i=1:length(gap)
         end
     end
     P2=polyfit(V2,vec2,1);
-    figure
-    plot(V,data(:,i),'o')
-    hold on
-    plot(V,P1(1)*V+P1(2))
-    plot(V,P2(1)*V+P2(2))
-    txt = ['\leftarrow Cutoff: ' num2str(cutoff(i)) ' V'];
-    t=text(cutoff(i),(-P2(1)*P1(2)+P1(1)*P2(2))/(P1(1)-P2(1))/2,txt);
-    t.FontSize = 14;
-    grid on
-    xlabel('RFA Voltage $V$','Interpreter','latex','FontSize',14)
-    ylabel('Counts/s','Interpreter','latex','FontSize',14)
-    title(['Gap height ',num2str(gap(i)),' um for Average count rate ',num2str(crate(i)),' C/s'])
-    axis([min(V) max(V) 0 1.2*max(data(:,i))])
+    % figure
+    % p=plot(V,data(:,i),'-o','color','black','LineWidth',1.5);
+    % p.MarkerFaceColor=[0 0 0];
+    % p.MarkerSize=3;
+    % hold on
+    % plot(V,P1(1)*V+P1(2),'color','blue','LineWidth',2)
+    % plot(V,P2(1)*V+P2(2),'color','red','LineWidth',2)
+    % % txt=['\leftarrow Cutoff: ' num2str(cutoff(i)) ' V'];
+    % % t=text(cutoff(i),(-P2(1)*P1(2)+P1(1)*P2(2))/(P1(1)-P2(1))/2,txt);
+    % % t.FontSize = 14;
+    % grid on
+    % xlabel('$V_{RFA}$ (V)','Interpreter','latex','FontSize',16)
+    % ylabel('$\# e^-$ (Counts/s)','Interpreter','latex','FontSize',16)
+    % title(['Gap height ',num2str(gap(i)),' um for Average count rate ',num2str(crate(i)),' C/s'])
+    % axis([min(V) max(V) 0 1.2*max(data(:,i))])
     cutoff(i)=-P2(2)/P2(1);
     DeltaV_cutoff(i)=(P2(1)*P1(2)-P1(1)*P2(2))/((P1(1)-P2(1))*P2(1));
 end
 
-P3=polyfit(gap,cutoff,1);
 figure
-plot(gap,cutoff,'o')
+p=plot(gap,cutoff,'o');
+p.MarkerFaceColor=[0 0 0];
+p.MarkerSize=5;
 hold on
-plot(gap,P3(1)*gap+P3(2))
-txt = ['\Delta V: ' num2str(cutoff(i)) ' V'];
-t2=text(gap(i),(-P2(1)*P1(2)+P1(1)*P2(2))/(P1(1)-P2(1))/2,txt);
-xlabel('Gap size $\mu m$','Interpreter','latex','FontSize',14)
-ylabel('Cutoff voltage $V$','Interpreter','latex','FontSize',14)
+% for i=1:length(gap)
+%     txt=['\DeltaV: ' num2str(DeltaV_cutoff(i)) ' V'];
+%     t=text(gap(i)-1,cutoff(i)-0.05,txt);
+%     t.FontSize = 14;
+% end
+xlabel('d $(\mu m)$','Interpreter','latex','FontSize',30)
+ylabel('$V_C\ V$','Interpreter','latex','FontSize',30)
+xTickLocations=[0 5 10 15 20 25];
+yTickLocations=[0 5 10 15 20 25];
+plot(gap,1017.7-(0.3*(1.5)^3)./gap)
+set(gca,'XTick', xTickLocations);
+set(gca,'YTick', xTickLocations);
 grid on
