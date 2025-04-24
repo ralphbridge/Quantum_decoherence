@@ -50,21 +50,37 @@ Cdata=readmatrix("Trigger_test.txt");
 bin=Cdata(:,1)/bw;
 cts=Cdata(:,2);
 
-% figure
-% plot(bin,cts,'o')
-% grid on
-
 tfix=zeros(size(cts));
 Vfix=zeros(size(cts));
 
 tfix(1)=tave(1);
+Vfix(1)=Vave(1);
 j=0;
 for i=2:length(tave)
     if (tave(i)-tave(i-1))<1.2*bw
         tfix(i+j)=tave(i);
+        Vfix(i+j)=Vave(i);
     else
-        for j=1:(round(tave(i)-tave(i-1))/2)
-            tfix(i+j)=tave(i-1)+j*bw;
+        for j=0:(round(tave(i)-tave(i-1))/2)-1
+            tfix(i+j)=tave(i-1)+(j+1)*bw;
+            Vfix(i+j)=min(Vave);
         end
     end
 end
+
+Vfix(find(tfix==0),:)=[];
+tfix(find(tfix==0),:)=[];
+measurementfix=1:length(tfix);
+
+Vfix=Vfix+max(Vfix);
+
+figure
+plot(measurementfix,Vfix,'o')
+title('Averaged data')
+xlabel('Measurement number n','FontSize',15)
+ylabel('RFA Voltage V','FontSize',15)
+grid on
+
+figure
+plot(bin,cts,'o')
+grid on
