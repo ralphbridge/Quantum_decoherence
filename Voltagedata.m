@@ -1,7 +1,7 @@
 N=10; % Number of voltage measurements per sweeping step
 bw=2; % Bin width
 
-Vdata=readmatrix("voltage_042125.xlsx");
+Vdata=readmatrix("data/voltage_042125.xlsx");
 
 t=Vdata(:,1);
 V=Vdata(:,2);
@@ -45,7 +45,7 @@ measurement=1:length(t)/N;
 % % axis([min(measurement(960/N:1220/N))-1 max(measurement(960/N:1220/N))+1 -1005.4 -1005.3])
 % grid on
 
-Cdata=readmatrix("Trigger_test.txt");
+Cdata=readmatrix("data/Trigger_042125.txt");
 
 bin=Cdata(:,1)/bw;
 cts=Cdata(:,2);
