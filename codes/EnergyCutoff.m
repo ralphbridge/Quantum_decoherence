@@ -4,8 +4,8 @@ gap=[];
 Defl=zeros(2,8);
 
 for idx=1:8
-    Vdata=readmatrix(['data/voltage_050525_',int2str(idx),'.xlsx']);
-    Cdata=readmatrix(['data/counts_050525_',int2str(idx),'.txt']);
+    Vdata=readmatrix(['../data/voltage_050525_',int2str(idx),'.xlsx']);
+    Cdata=readmatrix(['../data/counts_050525_',int2str(idx),'.txt']);
 
     N=Vdata(15,4); % Number of voltage measurements per sweeping step
     bw=Vdata(11,4); % Bin width
