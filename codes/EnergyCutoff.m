@@ -1,3 +1,5 @@
+set(0,'DefaultFigureWindowStyle','docked')
+
 ctsmatrix=zeros(16/0.05,8);
 Vmatrix=zeros(16/0.05,8);
 gap=[];
